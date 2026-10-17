@@ -1,22 +1,14 @@
 
 <?php
-$host = "sql203.infinityfree.com";
-$username = "if0_43203117";
-$password = "LeiBajande1";
-$database = "if0_43203117_mindcapsule";
+$host = "sql304.infinityfree.com";
+$username = "if0_43202198";
+$password = "PRomise0";
+$database = "if0_43202198_XXX";
 
-mysqli_report(MYSQLI_REPORT_OFF);
-
-$conn = new mysqli(
-    $host,
-    $username,
-    $password,
-    $database
-);
+$conn = new mysqli($host, $username, $password, $database);
 
 if ($conn->connect_error) {
-    error_log("Database connection failed: " . $conn->connect_error);
-    die("Sorry, the website is temporarily unavailable.");
+    die("Database connection failed.");
 }
 
 $conn->set_charset("utf8mb4");
