@@ -1,3 +1,4 @@
+
 <?php
 require_once "db.php";
 
@@ -62,22 +63,45 @@ function categoryLabel($category) {
     return $labels[$category] ?? "📍 Tambayan";
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Tam-Bayan ng QCU | Find Your Study Spot</title>
+
     <meta name="description"
           content="Discover cafés, study spots, and chill places near Quezon City University.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
           rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .btn-messenger {
+            display: inline-block;
+            background: #8064a2;
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.2s ease;
+        }
+
+        .btn-messenger:hover {
+            background: #006edc;
+            color: #ffffff;
+        }
+    </style>
 </head>
+
 <body>
 
 <header class="navbar">
@@ -94,10 +118,12 @@ function categoryLabel($category) {
 </header>
 
 <main>
+
     <section class="hero" id="home">
         <span class="eyebrow">YOUR CAMPUS BREAK, REIMAGINED ✧</span>
 
-        <h1>May vacant ka?<br>
+        <h1>
+            May vacant ka?<br>
             Find your <span>happy place.</span>
         </h1>
 
@@ -115,6 +141,7 @@ function categoryLabel($category) {
     </section>
 
     <section class="explore-section" id="tambayan">
+
         <div class="section-heading">
             <span class="eyebrow">YOUR NEXT DESTINATION</span>
             <h2>Find your kind of <span>tambayan.</span></h2>
@@ -122,8 +149,10 @@ function categoryLabel($category) {
         </div>
 
         <form action="index.php#tambayan" method="GET" class="search-form">
+
             <div class="search-input-wrap">
                 <span>⌕</span>
+
                 <input
                     type="search"
                     name="search"
@@ -133,25 +162,35 @@ function categoryLabel($category) {
             </div>
 
             <select name="category" aria-label="Filter by category">
+
                 <option value="all" <?= $category === "all" ? "selected" : "" ?>>
                     All places
                 </option>
+
                 <option value="food" <?= $category === "food" ? "selected" : "" ?>>
                     Cafés & Food
                 </option>
+
                 <option value="study" <?= $category === "study" ? "selected" : "" ?>>
                     Study Spots
                 </option>
+
                 <option value="relax" <?= $category === "relax" ? "selected" : "" ?>>
                     Chill Spots
                 </option>
+
             </select>
 
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
 
             <?php if ($search !== "" || $category !== "all"): ?>
-                <a href="index.php#tambayan" class="clear-link">Clear</a>
+                <a href="index.php#tambayan" class="clear-link">
+                    Clear
+                </a>
             <?php endif; ?>
+
         </form>
 
         <div class="results-caption">
@@ -160,31 +199,41 @@ function categoryLabel($category) {
         </div>
 
         <div class="places-grid">
+
             <?php if ($places->num_rows > 0): ?>
+
                 <?php while ($place = $places->fetch_assoc()): ?>
+
                     <article class="place-card">
 
                         <div class="place-image-wrap">
+
                             <?php if (!empty($place["image"])): ?>
+
                                 <img
                                     class="place-image"
                                     src="images/<?= e(basename($place["image"])) ?>"
                                     alt="<?= e($place["name"]) ?>"
                                     loading="lazy"
                                 >
+
                             <?php else: ?>
+
                                 <div class="image-placeholder">
                                     <span>✧</span>
                                     <small>YOUR NEXT TAMBAYAN</small>
                                 </div>
+
                             <?php endif; ?>
 
                             <span class="category-badge">
                                 <?= e(categoryLabel($place["category"])) ?>
                             </span>
+
                         </div>
 
                         <div class="place-content">
+
                             <h3><?= e($place["name"]) ?></h3>
 
                             <p class="place-address">
@@ -197,8 +246,10 @@ function categoryLabel($category) {
                             </p>
 
                             <div class="place-info">
+
                                 <div>
                                     <span class="info-label">OPENING HOURS</span>
+
                                     <strong>
                                         <?= e(showTime($place["opening_time"])) ?>
                                         –
@@ -208,6 +259,7 @@ function categoryLabel($category) {
 
                                 <div>
                                     <span class="info-label">WI-FI</span>
+
                                     <strong>
                                         <?php
                                         $wifi = $place["wifi_available"] ?? "unknown";
@@ -222,44 +274,85 @@ function categoryLabel($category) {
                                         ?>
                                     </strong>
                                 </div>
+
                             </div>
 
                             <div class="card-actions">
-                                <a class="btn btn-primary"
-                                   href="details.php?id=<?= (int)$place["id"] ?>">
+
+                                <a
+                                    class="btn btn-primary"
+                                    href="details.php?id=<?= (int)$place["id"] ?>"
+                                >
                                     View Details <span>↗</span>
                                 </a>
 
+                                <?php if (
+                                    $place["category"] === "food" &&
+                                    !empty($place["facebook_url"])
+                                ): ?>
+
+                                    <a
+                                        class="btn-messenger"
+                                        href="<?= e($place["facebook_url"]) ?>"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Order via Messenger ↗
+                                    </a>
+
+                                <?php endif; ?>
+
                                 <?php if (!empty($place["map_url"])): ?>
-                                    <a class="map-link"
-                                       href="<?= e($place["map_url"]) ?>"
-                                       target="_blank"
-                                       rel="noopener noreferrer">
+
+                                    <a
+                                        class="map-link"
+                                        href="<?= e($place["map_url"]) ?>"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
                                         View Map ↗
                                     </a>
+
                                 <?php endif; ?>
+
                             </div>
+
                         </div>
+
                     </article>
+
                 <?php endwhile; ?>
 
             <?php else: ?>
+
                 <div class="empty-state">
                     <div class="empty-icon">☁</div>
+
                     <h3>No places found just yet.</h3>
+
                     <p>Try another search term or choose a different category.</p>
+
                     <a href="index.php#tambayan" class="btn btn-primary">
                         View all places
                     </a>
                 </div>
+
             <?php endif; ?>
+
         </div>
+
     </section>
 
     <section class="about-section" id="about">
+
         <div class="about-symbol">✦</div>
+
         <span class="eyebrow">A LITTLE SPACE FOR QCU STUDENTS</span>
-        <h2>More than just a place.<br><span>It's your break.</span></h2>
+
+        <h2>
+            More than just a place.<br>
+            <span>It's your break.</span>
+        </h2>
 
         <p>
             Tam-Bayan ng QCU helps students discover nearby cafés,
@@ -267,18 +360,31 @@ function categoryLabel($category) {
             Find a place that fits your time, budget, and mood.
         </p>
 
-        <a href="#tambayan" class="text-link">Find your next tambayan →</a>
+        <a href="#tambayan" class="text-link">
+            Find your next tambayan →
+        </a>
+
     </section>
+
 </main>
 
 <footer class="footer">
-    <a href="index.php" class="footer-brand">✦ Tam-Bayan ng QCU</a>
+
+    <a href="index.php" class="footer-brand">
+        ✦ Tam-Bayan ng QCU
+    </a>
+
     <p>Made for QCU students, one vacant hour at a time.</p>
-    <small>Confirm current prices, opening hours, and Wi-Fi availability with each venue.</small>
+
+    <small>
+        Confirm current prices, opening hours, and Wi-Fi availability with each venue.
+    </small>
+
 </footer>
 
 </body>
 </html>
+
 <?php
 $stmt->close();
 $conn->close();
